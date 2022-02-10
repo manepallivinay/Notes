@@ -14,3 +14,22 @@ pipeline {
     }
 }
 
+# maven failed pipeline
+
+pipeline {
+    agent any
+    tool{
+       maven "m3" 
+    }
+
+    stages {
+        stage('build') {
+            agent{
+                label'slave'
+            }
+            steps {
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+    }
+}
