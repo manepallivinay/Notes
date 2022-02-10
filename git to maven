@@ -1,0 +1,22 @@
+pipeline{
+    agent any
+    stages{
+        stage("git"){
+            agent{
+                label 'slave'
+            }
+            steps{
+                git 'https://github.com/ravi2krishna/JavaCalculator.git'
+                
+            }
+        }
+    
+        stage("maven build"){
+            steps{
+                sh "cd /home/ec2-user/workspace/build"
+                sh "mvn clean package"
+                
+            }
+        }
+    }
+}
