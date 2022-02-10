@@ -6,7 +6,7 @@ pipeline{
                 label 'slave'
             }
             steps{
-                git 'https://github.com/ravi2krishna/JavaCalculator.git'
+                git 'https://github.com/manepallivinay/JavaWebCalculator.git'
                 
             }
         }
