@@ -1,0 +1,16 @@
+# slave build pipline
+pipeline {
+    agent any
+
+    stages {
+        stage('GIT HUB') {
+            agent{
+                label'slave'
+            }
+            steps {
+                git 'https://github.com/ravi2krishna/JavaCalculator.git'
+            }
+        }
+    }
+}
+
