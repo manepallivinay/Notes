@@ -1,0 +1,18 @@
+pipeline{
+    agent any
+    stages{
+        stage("git"){
+            steps{
+                git 'https://github.com/manepallivinay/JavaWebCalculator.git'
+                
+            }
+        }
+    
+        stage("maven build"){
+            steps{
+                sh "mvn clean package"
+                
+            }
+        }
+    }
+}
