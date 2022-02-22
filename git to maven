@@ -1,10 +1,10 @@
 pipeline{
-    agent any
+    agent {
+  label 'slave'
+}
     stages{
         stage("git"){
-            agent{
-                label 'slave'
-            }
+          
             steps{
                 git 'https://github.com/manepallivinay/JavaWebCalculator.git'
                 
@@ -13,8 +13,7 @@ pipeline{
     
         stage("maven build"){
             steps{
-                sh "cd /home/ec2-user/workspace/build"
-                sh "mvn clean package"
+               sh 'mvn clean package'
                 
             }
         }
