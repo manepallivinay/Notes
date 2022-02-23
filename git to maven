@@ -16,6 +16,12 @@ pipeline{
                sh 'mvn clean package'
                 
             }
+        }    
+        stage("tomcat deployment"){
+            steps{
+               sh 'mv target/*.war /home/ec2-user/apache-tomcat-7.0.94/webapps'
+                
+            }
         }
     }
 }
