@@ -5,55 +5,32 @@ resource "aws_subnet" "main" {
 }
 
 # vpc creation
-
-
-
 resource "aws_vpc" "vpc" {
 cidr_block = "10.0.0.0/16"
 instance_tenancy = "default"
-
-
-
 tags = {
 Name = "vpc"
 }
 }
 #subnet creation
-
-
-
 resource "aws_subnet" "Pub 1" {
 vpc_id = aws_vpc.vpc.id
 cidr_block = "10.0.1.0/24"
-
-
-
+map_public_ip_on_launch = true
 tags = {
 Name = "pub 1"
 }
 }
 # internet getway
-
-
-
 resource "aws_internet_gateway" "IGW" {
 vpc_id = aws_vpc.vpc.id
-
-
-
 tags = {
 Name = "IGW"
 }
 }
 # routetable
-
-
-
 resource "aws_route_table" "RTB" {
 vpc_id = aws_vpc.vpc.id
-
-
-
 route {
 cidr_block = "10.0.1.0/24"
 gateway_id = aws_internet_gateway.IGW.id
@@ -63,9 +40,6 @@ Name = "RTB"
 }
 }
 # routetable assiocation
-
-
-
 resource "aws_route_table_association" "rtb" {
 subnet_id = aws_subnet.pub 1.id
 route_table_id = aws_route_table.RTB.id
@@ -81,9 +55,6 @@ ami = "ami-005e54dee72cc1d00"
 instance_type = "t2.micro"
 key_name = "vinay"
 security_group = ["sg-ob800b1nf5gh"]
-
-
-
 tags = {
 Name = "HelloWorld"
 }
