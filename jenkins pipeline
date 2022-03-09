@@ -20,3 +20,29 @@ pipeline {
         }
     }
 }
+
+# added dcoker tomcat pipeline
+pipeline {
+    agent any
+
+    stages {
+        stage('git clone') {
+            steps {
+                git 'https://github.com/manepallivinay/MyApp.git'
+            }
+        }
+        stage('mvn ') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+         stage('docker deploy ') {
+            steps {
+                sh 'docker cp target/*.war ec241897e6f7:/usr/local/tomcat/webapps'
+            }
+        }
+        
+    }
+}
+
+# sudo chmod 777 /var/run/docker.sock
