@@ -1,0 +1,154 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "savinayeu01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-01-01",
+            "tags": {
+                "displayName": "storageaccount1"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            }
+        },
+        {
+            "name": "acrvinaytesteu01",
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2023-07-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "adminUserEnabled": true
+            }
+        },
+        {
+            "name": "uniquesqlservername",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "sqlServer1"
+            },
+            "properties": {
+                "administratorLogin": "adminUsername",
+                "administratorLoginPassword": "SecurePassword123!"
+            },
+            "resources": [
+                {
+                    "type": "databases",
+                    "apiVersion": "2021-11-01",
+                    "location": "[resourceGroup().location]",
+                    "name": "sqlDatabase1",
+                    "tags": {
+                        "displayName": "sqlDatabase1"
+                    },
+                    "sku": {
+                        "name": "Basic",
+                        "tier": "Basic",
+                        "capacity": 5
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', 'uniquesqlservername')]"
+                    ],
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "edition": "Basic",
+                        "maxSizeBytes": 2147483648,
+                        "requestedServiceObjectiveName": "Basic"
+                    }
+                },
+                {
+                    "type": "databases",
+                    "apiVersion": "2021-11-01",
+                    "location": "[resourceGroup().location]",
+                    "name": "sqlDatabase2",
+                    "tags": {
+                        "displayName": "sqlDatabase2"
+                    },
+                    "sku": {
+                        "name": "Basic",
+                        "tier": "Basic",
+                        "capacity": 5
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', 'uniquesqlservername')]"
+                    ],
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "edition": "Basic",
+                        "maxSizeBytes": 2147483648,
+                        "requestedServiceObjectiveName": "Basic"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "kv-vinay-test-eu-01",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2023-02-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "keyVault"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', 'uniquesqlservername')]"
+            ],
+            "properties": {
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": true,
+                "tenantId": "2295fdd4-7887-4ab6-b40d-ee2f983ebecc",
+                "accessPolicies": [
+                    {
+                        "tenantId": "2295fdd4-7887-4ab6-b40d-ee2f983ebecc",
+                        "objectId": "a3210eeb-6281-4a70-8203-0c6eb426efe9",
+                        "permissions": {
+                            "keys": ["Get"],
+                            "secrets": ["List", "Get", "Set"]
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "standard",
+                    "family": "A"
+                }
+            }
+        },
+        {
+            "name": "aksCluster1",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2021-10-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', 'uniquesqlservername')]"
+            ],
+            "properties": {
+                "kubernetesVersion": "1.25.11",
+                "dnsPrefix": "aksdns",
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool1",
+                        "osType": "Linux",
+                        "count": 2,
+                        "vmSize": "standard_a2_v2"
+                    }
+                ],
+                "servicePrincipalProfile": {
+                    "clientId": "00b70ee7-928c-4149-a258-cf8af04a3f7c",
+                    "secret": "QqX8Q~Dwt1_fFWHO-EMAkcB35NJ2HrePQzYz6bLO"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
